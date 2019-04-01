@@ -1,0 +1,158 @@
+%YAML 1.2
+---
+# See http://www.sublimetext.com/docs/3/syntax.html
+name: definition(cnd)
+file_extensions: [cnd]
+first_line_match: cnd
+scope: source.cnd
+
+variables:
+    string: '[A-Za-z_][A-Za-z_0-9]*'
+    url: '\bhttps?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?//=]*)\b'
+
+contexts:
+  # The prototype context is prepended to all contexts but those setting
+  # meta_include_prototype: false.
+  prototype:
+    - include: comments
+
+  main:
+    # The main context is the initial starting point of our syntax.
+    # Include other contexts from here (or specify them directly).
+    - include: import
+    - include: numbers
+    - include: strings
+    - include: baseUrl
+    - include: node
+    - include: nodeProp
+
+  baseUrl:
+    - match: \b{{url}}\b
+      scope: variable.other.constant.cnd
+
+  numbers:
+    - match: '\b(-)?[0-9.]+\b'
+      scope: constant.numeric.cnd
+
+  strings:
+    # Strings begin and end with quotes, and use backslashes as an escape
+    # character.
+    - match: '"'
+      scope: punctuation.definition.string.begin.cnd
+      push: inside_string
+    - match: "'"
+      scope: punctuation.definition.string.begin.cnd
+      push: inside_string
+
+  inside_string:
+    - meta_include_prototype: false
+    - meta_scope: string.quoted.double.cnd
+    - match: '"'
+      pop: true
+      scope: punctuation.definition.string.end.cnd
+    - match: "'"
+      pop: true
+      scope: punctuation.definition.string.end.cnd
+
+  url:
+    - match: "'"
+      scope: punctuation.definition.variable.begin.cnd
+      push:
+        - meta_include_prototype: false
+        - meta_scope: variable.language.cnd
+        - match: \b{{url}}\b
+        - match: "'"
+          scope: punctuation.definition.variable.end.cnd
+          pop: true
+
+
+  comments:
+    # Comments begin with a '//' and finish at the end of the line.
+    - match: '//'
+      scope: comment.line.double-dash.cnd
+      push:
+        # This is an anonymous context push for brevity.
+        - meta_scope: comment.line.double-slash.cnd
+        - match: $\n?
+          pop: true
+
+  import:
+    - meta_include_prototype: false
+    - meta_scope: variable.language.cnd
+    - match: '<'
+      scope: punctuation.definition.variable.begin.cnd
+      push: importID
+    - match: "'"
+      scope: punctuation.definition.string.begin.cnd
+      push: importUrl
+    - match: '>'
+      scope: invalid.illegal.cnd
+
+  importID:
+    - meta_include_prototype: false
+    - match: '\b{{string}}\b'
+      scope: variable.language.cnd
+    - match: '='
+      scope: variable.function.cnd
+      pop: true
+
+  importUrl:
+    - meta_include_prototype: false
+    - match: '\b{{url}}\b'
+      scope: string.other.cnd
+    - match: "'"
+      scope: punctuation.definition.string.end.cnd
+    - match: '>'
+      scope: punctuation.definition.variable.end.cnd
+      pop: true
+
+  node:
+    - match: '\b({{string}})(\:)({{string}})\b'
+      captures:
+        1: meta.namespace.cnd
+        2: punctuation.separator.continuation.cnd
+        3: support.module.cnd
+    - match: \[
+      scope: meta.brackets.cnd
+    - match: \]
+      scope: meta.brackets.cnd
+      embed: nodeDef
+      escape: \n
+
+  nodeDef:
+    - match: '>'
+      scope: meta.generic.cnd
+    - match: '\b({{string}})(\:)({{string}})\b'
+      captures:
+        1: meta.namespace.cnd
+        2: punctuation.separator.continuation.cnd
+        3: support.module.cnd
+    - match: '\bmixin\b'
+      scope: meta.annotation.identifier.cnd
+
+  nodeProp:
+    - match: '-'
+      scope: meta.block.cnd
+    - match: '\b{{string}}\b'
+      scope: variable.parameter.cnd
+    - match: \(
+      scope: variable.parameter.cnd
+      embed: prop
+      escape: \n
+
+  prop:
+    - match: '\b({{string}}|\:|\,)\b'
+      scope: variable.other.member.cnd
+    - match: \)
+      scope: variable.parameter.cnd
+      push: propOpt
+
+  propOpt:
+    - include: strings
+    - include: numbers
+    - meta_scope: support.function.cnd
+    - match: '<'
+      scope: punctuation.separator.mapping.key-value.cnd
+    - match: '\binternationalized\b'
+      scope: meta.parens.cnd
+

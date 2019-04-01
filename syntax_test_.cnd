@@ -1,0 +1,45 @@
+//SYNTAX TEST "Packages/JahiaSyntax/cnd.sublime-syntax"
+
+//foo
+// <- comment.line.double-slash
+
+1
+// <- constant.numeric
+
+http://www.bm.nantes.fr/jahia/mix/1.0
+// <- variable.other.constant
+
+   "Mot"
+// ^ punctuation.definition.string.begin
+//  ^^^ string.quoted.double
+//     ^ punctuation.definition.string.end
+
+
+<bmix = 'http://www.bm.nantes.fr/jahia/mix/1.0'>
+// <- punctuation.definition.variable.begin
+ // <- variable
+//    ^ variable.function
+//      ^ punctuation.definition.string.begin
+//       ^ string.other
+//                                            ^ punctuation.definition.string.end
+//                                             ^ punctuation.definition.variable.end
+
+[trnt:goodPractices] > jnt:content, trmix:trainingPRSE mixin
+// <- meta.brackets
+ // <- meta.namespace
+//   ^ punctuation.separator.continuation
+//    ^ support.module
+//                 ^ meta.brackets
+//                   ^ meta.generic
+//                     ^ meta.namespace
+//                        ^ punctuation.separator.continuation
+//                         ^ support.module
+//                                                        ^ meta.annotation.identifier
+
+[trnt:goodPractices] > jnt:content, trmix:trainingPRSE
+ - title (string, coucou) internationalized
+ // <- meta.block
+// ^ variable.parameter
+//       ^ variable.parameter
+//        ^ variable.other.member
+//                ^ variable.other.member

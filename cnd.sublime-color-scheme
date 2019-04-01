@@ -1,0 +1,89 @@
+{
+	"name": "cnd scheme",
+	"variables": {
+		// Define variables here
+		"blue1": "#38e4ae",
+		"blue2": "#1b998b",
+		"blue3": "#1198d2",
+		"brown": "#4a3512",
+		"red": "#d26dac",
+		"green1": "#abea9c",
+		"green2": "#bffd8f",
+		"gray": "#9cabac",
+		"pink": "#f74a28",
+		"orange": "#fecf8f",
+		"dark": "#130e0f",
+		"black": "#000000",
+		"yellow": "#ffae03"
+	},
+	"globals": {
+		"foreground": "white",
+		"background": "var(dark)",
+		"selection": "color(white alpha(0.20))",
+		"caret": "var(pink)"
+	},
+	"rules": [
+		{
+			"scope": "string",
+			"foreground": "var(blue1)",
+		},
+		{
+			"scope": "string.other",
+			"foreground": "var(blue3)",
+			"font_style": "underline",
+		},
+		{
+			"scope": "variable",
+			"foreground": "orange",
+			"font_style": "italic"
+		},
+		{
+			"scope": "variable.other",
+			"foreground": "var(orange)",
+			"font_style": "italic"
+		},
+		{
+			"scope": "comment",
+			"foreground": "gray",
+			"font_style": "italic"
+		},
+		{
+			"scope": "constant",
+			"foreground": "yellow",
+		},
+		{
+			"scope": "punctuation",
+			"foreground": "var(green2)",
+		},
+		{
+			"scope": "invalid",
+			"background": "var(red)",
+			"foreground": "var(black)",
+			"font_style": "underline",
+		},
+		{
+			"scope": "meta",
+			"foreground": "var(blue2)",
+		},
+		{
+			"scope": "meta.annotation, meta.namespace",
+			"foreground": "beige",
+		},
+		{
+			"scope": "meta.parens",
+			"foreground":
+            [
+                "hsl(100, 100%, 56%)",
+                "hsl(300, 56%, 56%)",
+            ]
+		},
+		{
+			"scope": "support",
+			"foreground": "green",
+		},
+		{
+			"scope": "support.module",
+			"foreground": "var(red)"
+		}
+	]
+}
